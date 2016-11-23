@@ -26,11 +26,12 @@ module.exports = function(options) {
         runOptions.push(file);
     });
 
-    if (!options.format) {
-        options.format = 'pretty';
+    if (options.profile) {
+        runOptions.push('--profile');
+        runOptions.push(options.profile);
     }
 
-    var formats = Array.isArray(options.format) ? options.format : [options.format];
+    var formats = options.format !== void 0 ? (Array.isArray(options.format) ? options.format : [options.format]) : [];
 
     formats.forEach(function(f) {
         runOptions.push('--format');

@@ -36,7 +36,42 @@ gulp.task('cucumber', function() {
 
 ---
 
-`options.format` supports cucumbers standard output formats : `summary`, `pretty` (default), `json`, `progress`. You can use an array for multiple formats.
+`options.format` supports cucumbers standard output formats : `summary`, `pretty` (default), `json`, `progress`. You can use an array for multiple formats. `pretty` 
+option by default
+
+---
+
+`options.profile` supports cucumbers standard working. You must create `cucumber.js` file in project root folder with the different profiles names like so:
+
+```js
+var profiles = {
+  default: '--format pretty --tags ~@to_develop',
+  profile_1: '--format progress --tags feature1 --tags ~@to_develop',
+  profile_2: '--format json --tags feature2 --tags ~@to_develop'
+};
+
+module.exports = profiles;
+```
+After that you can configure the `profile` option to take the profile name from console, for example:
+
+```js
+var argv = require('yargs').argv;
+
+gulp.task('cucumber', function() {
+    return gulp.src('*features/*').pipe(cucumber({
+        'steps': '*features/steps/*.js',
+        'support': '*features/support/*.js',
+        'profile': argv.profile ? argv.profile : argv.p ? argv.p : 'default'
+    }));
+});
+```
+
+```sh
+#Calling the gulp task...
+gulp cucumber --profile profile_1
+#or
+gulp cucumber -p profile_2
+```
 
 ---
 
